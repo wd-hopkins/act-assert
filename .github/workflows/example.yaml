@@ -6,12 +6,29 @@ on:
 jobs:
   main:
     runs-on: ubuntu-latest
+    outputs:
+      greeting: ${{ steps.output.outputs.greeting }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Run a one-line script
         run: echo Hello, world!
-      - name: Run a multi-line script
+      - name: Run a multi-line script and output
+        id: output
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+          echo "greeting='Hello, ${{ github.actor }}'" >> "$GITHUB_OUTPUT"
+
+  cleanup:
+    if: success() || needs.main.result == 'skipped'
+    needs: main
+    runs-on: my-self-hosted-runner
+    env:
+      GREETING: ${{ needs.main.outputs.greeting }}
+    steps:
+      - name: Clean up
+        run: |
+          echo "This job runs only on success of the main job"
+          echo "The output from the main job was $GREETING"
+          exit 1
