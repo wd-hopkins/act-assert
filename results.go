@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/nektos/act/pkg/model"
-	"github.com/nektos/act/pkg/runner"
+	"github.com/wd-hopkins/act/pkg/model"
+	"github.com/wd-hopkins/act/pkg/runner"
 )
 
 type Result string
@@ -87,7 +87,6 @@ type StepResults struct {
 func (s *StepResults) Result() Result {
 	return Result(s.step.Result)
 }
-
 
 func (s *StepResults) Logs() string {
 	return strings.TrimSpace(s.step.Logs)

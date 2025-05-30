@@ -6,9 +6,9 @@ import (
 
 	"maps"
 
-	"github.com/nektos/act/pkg/container"
-	"github.com/nektos/act/pkg/model"
-	"github.com/nektos/act/pkg/runner"
+	"github.com/wd-hopkins/act/pkg/container"
+	"github.com/wd-hopkins/act/pkg/model"
+	"github.com/wd-hopkins/act/pkg/runner"
 )
 
 type ActAssert struct {

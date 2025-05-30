@@ -1,6 +1,6 @@
 package act_assert
 
-import "github.com/nektos/act/pkg/model"
+import "github.com/wd-hopkins/act/pkg/model"
 
 type JobPlan struct {
 	name        string

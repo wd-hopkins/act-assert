@@ -2,7 +2,7 @@ package act_assert
 
 import (
 	"github.com/docker/docker/api/types/container"
-	"github.com/nektos/act/pkg/runner"
+	"github.com/wd-hopkins/act/pkg/runner"
 )
 
 type config struct {

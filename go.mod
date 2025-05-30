@@ -4,8 +4,8 @@ go 1.24
 
 require (
 	github.com/docker/docker v28.0.4+incompatible
-	github.com/nektos/act v0.2.75
 	github.com/stretchr/testify v1.10.0
+	github.com/wd-hopkins/act v0.0.0-20250530100815-c92e1155a7ba
 )
 
 require (
@@ -87,5 +87,3 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/nektos/act v0.2.75 => ../act

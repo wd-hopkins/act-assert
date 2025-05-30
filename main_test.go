@@ -1,7 +1,7 @@
 package act_assert_test
 
 import (
-	"github.com/nektos/act/pkg/model"
+	"github.com/wd-hopkins/act/pkg/model"
 	//log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
 	"github.com/wd-hopkins/act-assert"
