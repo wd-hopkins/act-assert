@@ -1,0 +1,6 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  main:
+    uses: ./test/callee.yaml
