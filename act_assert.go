@@ -64,6 +64,16 @@ func (a *ActAssert) WithInputs(inputs map[string]string) *ActAssert {
 	return a
 }
 
+func (a *ActAssert) WithPlatform(label, image string) *ActAssert {
+	a.platforms[label] = image
+	return a
+}
+
+func (a *ActAssert) WithWorkdir(workdir string) *ActAssert {
+	a.workdir = workdir
+	return a
+}
+
 func (a *ActAssert) Plan() (*ActAssert, error) {
 	planner, err := model.NewWorkflowPlanner(a.workflowFilePath, true)
 	if err != nil {
@@ -127,7 +137,17 @@ func (a *ActAssert) Execute() error {
 	}
 	ctx := context.Background()
 	e := r.NewPlanExecutor(a.plan)
-	err = e(ctx)
+	_ = e(ctx)
 	a.runContexts = r.GetRunContexts()
-	return err
+	return nil
+}
+
+func (a *ActAssert) Copy() *ActAssert {
+	// Create a new ActAssert with the same configuration, save for runContexts
+	return &ActAssert{
+		config:           a.config,
+		jobName:          a.jobName,
+		workflowFilePath: a.workflowFilePath,
+		plan:             a.plan,
+	}
 }

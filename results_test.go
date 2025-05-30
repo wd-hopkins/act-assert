@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wdhopkins/act_assert"
+	"github.com/wd-hopkins/act-assert"
 )
 
 func Test_get_job_result(t *testing.T) {

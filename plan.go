@@ -14,6 +14,9 @@ func (j *JobPlan) SetResult(result Result) *JobPlan {
 }
 
 func (j *JobPlan) SetOutput(k, v string) *JobPlan {
+	if j.jobRun.Job().Outputs == nil {
+		j.jobRun.Job().Outputs = make(map[string]string)
+	}
 	j.jobRun.Job().Outputs[k] = v
 	return j
 }

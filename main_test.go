@@ -4,7 +4,7 @@ import (
 	"github.com/nektos/act/pkg/model"
 	//log "github.com/sirupsen/logrus"
 	"github.com/stretchr/testify/assert"
-	"github.com/wdhopkins/act_assert"
+	"github.com/wd-hopkins/act-assert"
 	"testing"
 )
 

@@ -84,6 +84,11 @@ type StepResults struct {
 	step     *model.Step
 }
 
+func (s *StepResults) Result() Result {
+	return Result(s.step.Result)
+}
+
+
 func (s *StepResults) Logs() string {
 	return strings.TrimSpace(s.step.Logs)
 }
