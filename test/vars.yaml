@@ -1,0 +1,12 @@
+name: Test overriding github vars
+
+on:
+  workflow_call:
+
+jobs:
+  env_job:
+    runs-on: ubuntu-latest
+    env:
+      branch: ${{ github.ref }}
+    steps:
+      - run: echo "branch=$branch"

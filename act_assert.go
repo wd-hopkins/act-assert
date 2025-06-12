@@ -38,6 +38,7 @@ func New() *ActAssert {
 			noSkipCheckout:        false,
 			containerNetworkMode:  "host",
 		},
+		workflowFilePath: "./.github/workflows/",
 	}
 }
 
@@ -64,6 +65,16 @@ func (a *ActAssert) WithInputs(inputs map[string]string) *ActAssert {
 	return a
 }
 
+func (a *ActAssert) WithEnvironment(env map[GithubEnv]string) *ActAssert {
+	if a.env == nil {
+		a.env = make(map[string]string)
+	}
+	for k, v := range env {
+		a.env[string(k)] = v
+	}
+	return a
+}
+
 func (a *ActAssert) WithPlatform(label, image string) *ActAssert {
 	a.platforms[label] = image
 	return a
@@ -71,6 +82,16 @@ func (a *ActAssert) WithPlatform(label, image string) *ActAssert {
 
 func (a *ActAssert) WithWorkdir(workdir string) *ActAssert {
 	a.workdir = workdir
+	return a
+}
+
+func (a *ActAssert) WithDefaultBranch(branch string) *ActAssert {
+	a.defaultBranch = branch
+	return a
+}
+
+func (a *ActAssert) WithJsonLogger() *ActAssert {
+	a.jSONLogger = true
 	return a
 }
 
