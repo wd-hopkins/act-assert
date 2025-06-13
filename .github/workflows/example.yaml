@@ -31,3 +31,13 @@ jobs:
         run: |
           echo "The output from the main job was $GREETING"
           exit 1
+  
+  output:
+    needs: main
+    runs-on: ubuntu-latest
+    env:
+      TOKEN: should-be-masked
+    steps:
+      - run: |
+          echo "::add-mask::$TOKEN"
+          echo "This should be masked: $TOKEN"

@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wd-hopkins/act-assert"
+	act_assert "github.com/wd-hopkins/act-assert"
 )
 
 func Test_get_job_result(t *testing.T) {
@@ -63,4 +63,17 @@ func Test_get_reusable_job_logs(t *testing.T) {
 job_1: I am job_1: Output from job_1
 job_2: Run a one-line script: Hello, world!
 job_2: I am job_2: Output from job_2`, logs)
+}
+
+func Test_mask_secrets_in_logs(t *testing.T) {
+	workflow, err := act_assert.New().
+		WithWorkflowPath(".github/workflows/example.yaml").
+		Plan()
+	assert.NoError(t, err)
+
+	_ = workflow.Execute()
+
+	results := act_assert.NewResults(*workflow)
+	logs := results.Job("output").Logs()
+	assert.NotContains(t, logs, "should-be-masked")
 }

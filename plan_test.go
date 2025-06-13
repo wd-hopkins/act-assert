@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/wd-hopkins/act-assert"
+	act_assert "github.com/wd-hopkins/act-assert"
 )
 
 func Test_override_job_outputs(t *testing.T) {

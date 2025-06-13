@@ -30,6 +30,7 @@ func New() *ActAssert {
 			token:          os.Getenv("GITHUB_TOKEN"),
 			platforms: map[string]string{
 				"ubuntu-latest": "node:16-buster-slim",
+				"ubuntu-24.04":  "node:16-bullseye-slim",
 				"ubuntu-22.04":  "node:16-bullseye-slim",
 				"ubuntu-20.04":  "node:16-buster-slim",
 				"ubuntu-18.04":  "node:16-buster-slim",
@@ -133,6 +134,26 @@ func (a *ActAssert) Job(name string) *JobPlan {
 		jobRun:      job,
 		stepOutputs: make(map[string]map[string]string),
 	}
+}
+
+func (a *ActAssert) AllJobs() []*JobPlan {
+	if a.plan == nil {
+		panic("Plan is nil. Did you forget to call Plan()?")
+	}
+
+	var jobs []*JobPlan
+
+	for _, stage := range a.plan.Stages {
+		for _, run := range stage.Runs {
+			jobs = append(jobs, &JobPlan{
+				name:        run.JobID,
+				jobRun:      run,
+				stepOutputs: make(map[string]map[string]string),
+			})
+		}
+	}
+
+	return jobs
 }
 
 func (a *ActAssert) SetJobResultsFunc(result Result, f func(*model.Job) bool) *ActAssert {
