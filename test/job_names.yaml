@@ -1,0 +1,22 @@
+name: Test getting job by name
+
+on:
+  workflow_call:
+
+jobs:
+  job_key:
+    runs-on: ubuntu-latest
+    name: Job Name
+    steps:
+      - run: echo "job"
+
+  matrix_job_key:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.name }}
+    strategy:
+      matrix:
+        include:
+          - name: Job 1
+          - name: Job 2
+    steps:
+      - run: echo "matrix_job"

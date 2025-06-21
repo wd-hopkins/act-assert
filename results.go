@@ -29,14 +29,30 @@ func NewResults(act ActAssert) *Results {
 
 func (r *Results) Job(name string) *JobResults {
 	for _, ctx := range r.runContexts {
-		if ctx.JobName == name {
+		if ctx.JobName == name || ctx.Run.JobID == name {
 			return &JobResults{
-				JobName:    name,
+				JobName:    ctx.JobName,
 				runContext: ctx,
 			}
 		}
 	}
-	panic("Job not found in results")
+	panic(fmt.Sprintf("Job %s not found in results", name))
+}
+
+func (r *Results) MatrixJob(name string) MatrixJobResults {
+	var matrixResults MatrixJobResults
+	for _, ctx := range r.runContexts {
+		if ctx.Run.JobID == name {
+			matrixResults = append(matrixResults, &JobResults{
+				JobName:    ctx.Run.JobID,
+				runContext: ctx,
+			})
+		}
+	}
+	if len(matrixResults) <= 0 {
+		panic(fmt.Sprintf("Job %s not found in results", name))
+	}
+	return matrixResults
 }
 
 type JobResults struct {
@@ -82,6 +98,8 @@ func (j *JobResults) Step(name string) *StepResults {
 	}
 	panic("Step not found in Job results")
 }
+
+type MatrixJobResults []*JobResults
 
 type StepResults struct {
 	StepName string

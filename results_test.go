@@ -77,3 +77,31 @@ func Test_mask_secrets_in_logs(t *testing.T) {
 	logs := results.Job("output").Logs()
 	assert.NotContains(t, logs, "should-be-masked")
 }
+
+func Test_get_job_names(t *testing.T) {
+	workflow, err := act_assert.New().
+		WithWorkflowPath("test/job_names.yaml").
+		Plan()
+	assert.NoError(t, err)
+
+	_ = workflow.Execute()
+
+	results := act_assert.NewResults(*workflow)
+	assert.NotPanics(t, func() { results.Job("job_key") })
+	assert.NotPanics(t, func() { results.Job("Job Name") })
+}
+
+func Test_get_matrix_job_names(t *testing.T) {
+	workflow, err := act_assert.New().
+		WithWorkflowPath("test/job_names.yaml").
+		Plan()
+	assert.NoError(t, err)
+
+	_ = workflow.Execute()
+
+	results := act_assert.NewResults(*workflow)
+	assert.NotPanics(t, func() {
+		job := results.MatrixJob("matrix_job_key")
+		assert.Len(t, job, 2)
+	})
+}
