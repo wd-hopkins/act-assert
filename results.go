@@ -35,6 +35,16 @@ func (r *Results) Job(name string) *JobResults {
 				runContext: ctx,
 			}
 		}
+		if ctx.ChildContexts != nil {
+			for _, childContext := range *ctx.ChildContexts {
+				if childContext.JobName == name || childContext.Run.JobID == name {
+					return &JobResults{
+						JobName:    ctx.JobName,
+						runContext: ctx,
+					}
+				}
+			}
+		}
 	}
 	panic(fmt.Sprintf("Job %s not found in results", name))
 }
@@ -47,6 +57,16 @@ func (r *Results) MatrixJob(name string) MatrixJobResults {
 				JobName:    ctx.Run.JobID,
 				runContext: ctx,
 			})
+		}
+		if ctx.ChildContexts != nil {
+			for _, childContext := range *ctx.ChildContexts {
+				if childContext.JobName == name || childContext.Run.JobID == name {
+					matrixResults = append(matrixResults, &JobResults{
+						JobName:    childContext.Run.JobID,
+						runContext: childContext,
+					})
+				}
+			}
 		}
 	}
 	if len(matrixResults) <= 0 {
@@ -88,6 +108,12 @@ func (j *JobResults) Logs() string {
 }
 
 func (j *JobResults) Step(name string) *StepResults {
+	jobType, _ := j.runContext.Run.Job().Type()
+	if jobType == model.JobTypeReusableWorkflowLocal ||
+		jobType == model.JobTypeReusableWorkflowRemote ||
+		j.runContext.ChildContexts != nil {
+		panic("Job is calling a reusable workflow and has no steps")
+	}
 	for _, step := range j.runContext.Run.Job().Steps {
 		if step.ID == name || step.Name == name {
 			return &StepResults{

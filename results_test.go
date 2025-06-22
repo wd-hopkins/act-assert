@@ -61,8 +61,8 @@ func Test_get_reusable_job_logs(t *testing.T) {
 	logs := results.Job("main").Logs()
 	assert.Equal(t, `job_1: Run a one-line script: Hello, world!
 job_1: I am job_1: Output from job_1
-job_2: Run a one-line script: Hello, world!
-job_2: I am job_2: Output from job_2`, logs)
+reusable_job_2: Run a one-line script: Hello, world!
+reusable_job_2: I am job_2: Output from job_2`, logs)
 }
 
 func Test_mask_secrets_in_logs(t *testing.T) {
@@ -104,4 +104,17 @@ func Test_get_matrix_job_names(t *testing.T) {
 		job := results.MatrixJob("matrix_job_key")
 		assert.Len(t, job, 2)
 	})
+}
+
+func Test_get_reusable_job_names(t *testing.T) {
+	workflow, err := act_assert.New().
+		WithWorkflowPath("test/caller.yaml").
+		Plan()
+	assert.NoError(t, err)
+
+	_ = workflow.Execute()
+
+	results := act_assert.NewResults(*workflow)
+	assert.NotPanics(t, func() { results.Job("job_1") })
+	assert.NotPanics(t, func() { results.Job("reusable_job_2") })
 }
