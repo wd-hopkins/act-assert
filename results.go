@@ -100,6 +100,10 @@ func (j *JobResults) Outputs() map[string]string {
 	return j.runContext.Run.Job().Outputs
 }
 
+func (j *JobResults) Masks() []string {
+	return j.runContext.Masks
+}
+
 func (j *JobResults) Logs() string {
 	if j.runContext.ChildContexts == nil {
 		return aggregateStepLogs(j.runContext)
