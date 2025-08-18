@@ -34,6 +34,7 @@ type config struct {
 	containerOptions                   string                     // Options for the job container
 	useGitIgnore                       bool                       // controls if paths in .gitignore should not be copied into container, default true
 	gitHubInstance                     string                     // GitHub instance to use, default "github.com"
+	runAsUser                          string                     // User UID with which to run the job container
 	containerCapAdd                    []string                   // list of kernel capabilities to add to the containers
 	containerCapDrop                   []string                   // list of kernel capabilities to remove from the containers
 	autoRemove                         bool                       // controls if the container is automatically removed upon workflow completion
@@ -79,6 +80,7 @@ func (c config) toRunnerConfig() *runner.Config {
 		ContainerOptions:                   c.containerOptions,
 		UseGitIgnore:                       c.useGitIgnore,
 		GitHubInstance:                     c.gitHubInstance,
+		RunAsUser:                          c.runAsUser,
 		ContainerCapAdd:                    c.containerCapAdd,
 		ContainerCapDrop:                   c.containerCapDrop,
 		AutoRemove:                         c.autoRemove,

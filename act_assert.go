@@ -96,6 +96,16 @@ func (a *ActAssert) WithJsonLogger() *ActAssert {
 	return a
 }
 
+func (a *ActAssert) WithUser(user string) *ActAssert {
+	a.runAsUser = user
+	return a
+}
+
+func (a *ActAssert) WithForcePull(pull bool) *ActAssert {
+	a.forcePull = pull
+	return a
+}
+
 func (a *ActAssert) Plan() (*ActAssert, error) {
 	planner, err := model.NewWorkflowPlanner(a.workflowFilePath, true)
 	if err != nil {

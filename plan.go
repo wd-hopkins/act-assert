@@ -1,6 +1,12 @@
 package act_assert
 
-import "github.com/wd-hopkins/act/pkg/model"
+import (
+	"fmt"
+	"github.com/wd-hopkins/act/pkg/container"
+	"github.com/wd-hopkins/act/pkg/model"
+	"os"
+	"path/filepath"
+)
 
 type JobPlan struct {
 	name        string
@@ -25,6 +31,32 @@ func (j *JobPlan) SetStepResultsFunc(result Result, f func(*model.Step) bool) *J
 	j.jobRun.StepResultsFunc = func(step *model.Step) (bool, string) {
 		return f(step), string(result)
 	}
+	return j
+}
+
+func (j *JobPlan) SetContainerImage(image string) *JobPlan {
+	j.jobRun.Job().ContainerImageOverride = image
+	return j
+}
+
+func (j *JobPlan) CopyFileToContainer(hostPath, destPath string) *JobPlan {
+	file, err := os.ReadFile(hostPath)
+	if err != nil {
+		panic(err)
+	}
+	if j.jobRun.FileMounts == nil {
+		j.jobRun.FileMounts = map[string]*container.FileEntry{}
+	}
+	j.jobRun.FileMounts[filepath.Dir(destPath)] = &container.FileEntry{
+		Name: filepath.Base(destPath),
+		Mode: 0o644,
+		Body: string(file),
+	}
+	return j
+}
+
+func (j *JobPlan) WithBindMount(source, dest string) *JobPlan {
+	j.jobRun.BindMounts = append(j.jobRun.BindMounts, fmt.Sprintf("%v:%v", source, dest))
 	return j
 }
 
