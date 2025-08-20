@@ -105,3 +105,13 @@ func (s *StepPlan) SetOutputs(o map[string]string) *StepPlan {
 func (s *StepPlan) SetOutput(k, v string) *StepPlan {
 	return s.SetOutputs(map[string]string{k: v})
 }
+
+func (s *StepPlan) SetEnv(envs map[string]string) *StepPlan {
+	if s.step.EnvOverrides == nil {
+		s.step.EnvOverrides = map[string]string{}
+	}
+	for k, v := range envs {
+		s.step.EnvOverrides[k] = v
+	}
+	return s
+}

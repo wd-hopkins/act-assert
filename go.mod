@@ -5,7 +5,7 @@ go 1.24
 require (
 	github.com/docker/docker v28.2.2+incompatible
 	github.com/stretchr/testify v1.10.0
-	github.com/wd-hopkins/act v0.0.0-20250818204130-fd56e565f59c
+	github.com/wd-hopkins/act v0.0.0-20250820203248-d0f99922a433
 )
 
 require (
