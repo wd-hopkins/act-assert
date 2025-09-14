@@ -20,6 +20,19 @@ func Test_get_job_result(t *testing.T) {
 	assert.Equal(t, act_assert.Failure, results.Job("cleanup").Result())
 }
 
+func Test_get_step_result(t *testing.T) {
+	workflow, err := act_assert.New().
+		WithWorkflowPath(".github/workflows/example.yaml").
+		Plan()
+	assert.NoError(t, err)
+
+	_ = workflow.Execute()
+
+	results := act_assert.NewResults(*workflow)
+	mainJob := results.Job("main")
+	assert.Equal(t, act_assert.Success, mainJob.Step("Run a one-line script").Result())
+}
+
 func Test_get_step_logs(t *testing.T) {
 	workflow, err := act_assert.New().
 		WithWorkflowPath(".github/workflows/example.yaml").

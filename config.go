@@ -3,6 +3,7 @@ package act_assert
 import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/wd-hopkins/act/pkg/runner"
+	"maps"
 )
 
 type config struct {
@@ -95,4 +96,19 @@ func (c config) toRunnerConfig() *runner.Config {
 		ContainerNetworkMode:               c.containerNetworkMode,
 		ActionCache:                        c.actionCache,
 	}
+}
+
+func (c config) Clone() config {
+	clone := c
+	clone.env = maps.Clone(c.env)
+	clone.inputs = maps.Clone(c.inputs)
+	clone.secrets = maps.Clone(c.secrets)
+	clone.vars = maps.Clone(c.vars)
+	clone.platforms = maps.Clone(c.platforms)
+	clone.matrix = maps.Clone(c.matrix)
+	clone.containerCapAdd = make([]string, len(c.containerCapAdd))
+	copy(clone.containerCapAdd, c.containerCapAdd)
+	clone.containerCapDrop = make([]string, len(c.containerCapDrop))
+	copy(clone.containerCapDrop, c.containerCapDrop)
+	return clone
 }

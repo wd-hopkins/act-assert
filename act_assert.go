@@ -197,7 +197,7 @@ func (a *ActAssert) Execute() error {
 func (a *ActAssert) Copy() *ActAssert {
 	// Create a new ActAssert with the same configuration, save for runContexts
 	return &ActAssert{
-		config:           a.config,
+		config:           a.config.Clone(),
 		jobName:          a.jobName,
 		workflowFilePath: a.workflowFilePath,
 		plan:             a.plan,
