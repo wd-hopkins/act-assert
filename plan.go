@@ -19,6 +19,11 @@ func (j *JobPlan) SetResult(result Result) *JobPlan {
 	return j
 }
 
+func (j *JobPlan) Skip() *JobPlan {
+	j.SetResult(Skipped)
+	return j
+}
+
 func (j *JobPlan) SetOutput(k, v string) *JobPlan {
 	if j.jobRun.Job().Outputs == nil {
 		j.jobRun.Job().Outputs = make(map[string]string)

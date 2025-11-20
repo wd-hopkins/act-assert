@@ -111,6 +111,10 @@ func (j *JobResults) Logs() string {
 	return aggregateReusableJobLogs(j.runContext)
 }
 
+func (j *JobResults) Summary() string {
+	return j.runContext.Summary
+}
+
 func (j *JobResults) Step(name string) *StepResults {
 	jobType, _ := j.runContext.Run.Job().Type()
 	if jobType == model.JobTypeReusableWorkflowLocal ||

@@ -2,7 +2,10 @@ package act_assert
 
 import (
 	"context"
+	"github.com/wd-hopkins/act/pkg/artifacts"
+	"github.com/wd-hopkins/act/pkg/common"
 	"os"
+	"strconv"
 
 	"maps"
 
@@ -13,10 +16,11 @@ import (
 
 type ActAssert struct {
 	config
-	jobName          string
-	workflowFilePath string
-	plan             *model.Plan
-	runContexts      []*runner.RunContext
+	jobName              string
+	workflowFilePath     string
+	plan                 *model.Plan
+	runContexts          []*runner.RunContext
+	artifactServerConfig ArtifactServerConfig
 }
 
 func New() *ActAssert {
@@ -38,6 +42,8 @@ func New() *ActAssert {
 			containerArchitecture: "linux/amd64",
 			noSkipCheckout:        false,
 			containerNetworkMode:  "host",
+			artifactServerAddr:    common.GetOutboundIP().String(),
+			artifactServerPort:    "34567",
 		},
 		workflowFilePath: "./.github/workflows/",
 	}
@@ -106,8 +112,19 @@ func (a *ActAssert) WithForcePull(pull bool) *ActAssert {
 	return a
 }
 
+func (a *ActAssert) ConfigureArtifactServer(config ArtifactServerConfig) *ActAssert {
+	a.artifactServerPath = config.Path
+	if config.Port > 0 {
+		a.artifactServerPort = strconv.Itoa(config.Port)
+	}
+	if config.Host != "" {
+		a.artifactServerAddr = config.Host
+	}
+	return a
+}
+
 func (a *ActAssert) Plan() (*ActAssert, error) {
-	planner, err := model.NewWorkflowPlanner(a.workflowFilePath, true)
+	planner, err := model.NewWorkflowPlanner(a.workflowFilePath, true, false)
 	if err != nil {
 		return a, err
 	}
@@ -188,6 +205,20 @@ func (a *ActAssert) Execute() error {
 		return err
 	}
 	ctx := context.Background()
+
+	// Start artifact server if configured
+	serverAddr := a.artifactServerAddr
+	if serverAddr == "host.docker.internal" {
+		serverAddr = "localhost"
+	}
+	cancel := artifacts.Serve(ctx, a.artifactServerPath, serverAddr, a.artifactServerPort)
+	defer func(cancel context.CancelFunc, path string) {
+		cancel()
+		if a.artifactServerConfig.Cleanup {
+			_ = os.RemoveAll(path)
+		}
+	}(cancel, a.artifactServerPath)
+
 	e := r.NewPlanExecutor(a.plan)
 	_ = e(ctx)
 	a.runContexts = r.GetRunContexts()
