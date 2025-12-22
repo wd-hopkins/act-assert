@@ -72,3 +72,20 @@ func Test_set_step_env(t *testing.T) {
 	logs := results.Job("cleanup").Step("Clean up").Logs()
 	assert.Equal(t, `The output from the main job was Goodbye!`, logs)
 }
+
+func Test_skip_step_execution(t *testing.T) {
+	workflow, err := act_assert.New().
+		WithWorkflowPath(".github/workflows/example.yaml").
+		Plan()
+	assert.NoError(t, err)
+
+	workflow.Job("main").
+		Step("output").
+		Skip(false)
+
+	_ = workflow.Execute()
+
+	results := act_assert.NewResults(*workflow)
+	assert.Equal(t, results.Job("main").Step("output").Result(), act_assert.Success)
+	assert.Empty(t, results.Job("main").Step("output").Logs())
+}

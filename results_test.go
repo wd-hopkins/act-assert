@@ -131,3 +131,17 @@ func Test_get_reusable_job_names(t *testing.T) {
 	assert.NotPanics(t, func() { results.Job("job_1") })
 	assert.NotPanics(t, func() { results.Job("reusable_job_2") })
 }
+
+func TestStepResults_CalledWith(t *testing.T) {
+	workflow, err := act_assert.New().
+		WithWorkflowPath(".github/workflows/example.yaml").
+		WithEvent("workflow_dispatch").
+		Plan()
+	assert.NoError(t, err)
+
+	_ = workflow.Execute()
+
+	results := act_assert.NewResults(*workflow)
+	main := results.Job("main")
+	main.Step("Checkout").AssertCalledWith(t, map[string]string{"token": "dispatch"})
+}

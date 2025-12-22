@@ -3,7 +3,9 @@ package act_assert
 import (
 	"context"
 	"fmt"
+	"regexp"
 	"strings"
+	"testing"
 
 	"github.com/wd-hopkins/act/pkg/model"
 	"github.com/wd-hopkins/act/pkg/runner"
@@ -146,6 +148,25 @@ func (s *StepResults) Result() Result {
 
 func (s *StepResults) Logs() string {
 	return strings.TrimSpace(s.step.Logs)
+}
+
+func (s *StepResults) AssertCalledWith(t *testing.T, inputs map[string]string) {
+	envs := s.step.EnvEvaluated
+	var errors []string
+	for k, expected := range inputs {
+		envKey := regexp.MustCompile("[^A-Z0-9-]").ReplaceAllString(strings.ToUpper(k), "_")
+		envKey = fmt.Sprintf("INPUT_%s", strings.ToUpper(envKey))
+		if actual, ok := envs[envKey]; ok {
+			if actual != expected {
+				errors = append(errors, fmt.Sprintf("Input '%s' expected '%s' != actual '%s'", k, expected, actual))
+			}
+		} else {
+			errors = append(errors, fmt.Sprintf("Input '%s' not found in step '%s'", k, s.StepName))
+		}
+	}
+	if len(errors) > 0 {
+		t.Fatalf("Step '%s' did not receive expected inputs:\n%s", s.StepName, strings.Join(errors, "\n"))
+	}
 }
 
 func aggregateReusableJobLogs(runContext *runner.RunContext) string {

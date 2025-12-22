@@ -2,10 +2,11 @@ package act_assert
 
 import (
 	"fmt"
-	"github.com/wd-hopkins/act/pkg/container"
-	"github.com/wd-hopkins/act/pkg/model"
 	"os"
 	"path/filepath"
+
+	"github.com/wd-hopkins/act/pkg/container"
+	"github.com/wd-hopkins/act/pkg/model"
 )
 
 type JobPlan struct {
@@ -93,6 +94,17 @@ type StepPlan struct {
 
 func (s *StepPlan) SetResult(result Result) *StepPlan {
 	s.step.Result = string(result)
+	return s
+}
+
+// Skip the execution of the step. If setResult is true, the step result will be marked as Skipped.
+// Otherwise, the step result can be Success or Skipped depending on the evaluation of the step's 'if' condition.
+func (s *StepPlan) Skip(setResult bool) *StepPlan {
+	if setResult {
+		s.SetResult(Skipped)
+	} else {
+		s.step.SkipExecution = true
+	}
 	return s
 }
 
