@@ -145,3 +145,20 @@ func TestStepResults_CalledWith(t *testing.T) {
 	main := results.Job("main")
 	main.Step("Checkout").AssertCalledWith(t, map[string]string{"token": "dispatch"})
 }
+
+func TestJobResults_CalledWith(t *testing.T) {
+	workflow, err := act_assert.New().
+		WithWorkflowPath("test/caller.yaml").
+		Plan()
+	assert.NoError(t, err)
+
+	_ = workflow.Execute()
+
+	results := act_assert.NewResults(*workflow)
+	main := results.Job("main")
+	main.AssertCalledWith(t, map[string]string{
+		"string_input": "nektos/act",
+		"bool_input":   "true",
+		"number_input": "1",
+	})
+}

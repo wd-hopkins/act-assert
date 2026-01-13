@@ -2,10 +2,11 @@ package act_assert
 
 import (
 	"context"
-	"github.com/wd-hopkins/act/pkg/artifacts"
-	"github.com/wd-hopkins/act/pkg/common"
 	"os"
 	"strconv"
+
+	"github.com/wd-hopkins/act/pkg/artifacts"
+	"github.com/wd-hopkins/act/pkg/common"
 
 	"maps"
 
@@ -226,7 +227,10 @@ func (a *ActAssert) Execute() error {
 	}(cancel, a.artifactServerPath)
 
 	e := r.NewPlanExecutor(a.plan)
-	_ = e(ctx)
+	err = e(ctx)
+	if err != nil {
+		common.Logger(ctx).Errorf("Error executing plan: %v", err)
+	}
 	a.runContexts = r.GetRunContexts()
 	return nil
 }

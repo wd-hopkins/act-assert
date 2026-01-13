@@ -1,5 +1,18 @@
 on:
   workflow_call:
+    inputs:
+      string_input:
+        type: string
+      bool_input:
+        type: boolean
+      number_input:
+        type: number
+      empty_string_input:
+        type: string
+      empty_bool_input:
+        type: boolean
+      empty_number_input:
+        type: number
 
 jobs:
   job_1:

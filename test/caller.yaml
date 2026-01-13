@@ -4,3 +4,7 @@ on:
 jobs:
   main:
     uses: ./test/callee.yaml
+    with:
+      number_input: 1
+      bool_input: true
+      string_input: ${{ github.actor }}

@@ -117,6 +117,31 @@ func (j *JobResults) Summary() string {
 	return j.runContext.Summary
 }
 
+func (j *JobResults) AssertCalledWith(t *testing.T, inputs map[string]string) {
+	jobType, err := j.runContext.Run.Job().Type()
+	if err != nil {
+		t.Fatalf("Error getting job type: %v", err)
+	}
+	if jobType == model.JobTypeDefault {
+		t.Fatalf("Job '%s' is not calling a reusable workflow", j.JobName)
+	}
+
+	with := j.runContext.WithEvaluated
+	var errors []string
+	for k, expected := range inputs {
+		if actual, ok := with[k]; ok {
+			if actual != expected {
+				errors = append(errors, fmt.Sprintf("Input '%s' expected '%s' != actual '%s'", k, expected, actual))
+			}
+		} else {
+			errors = append(errors, fmt.Sprintf("Input '%s' not found in job '%s'", k, j.JobName))
+		}
+	}
+	if len(errors) > 0 {
+		t.Fatalf("Job '%s' did not receive expected inputs:\n%s", j.JobName, strings.Join(errors, "\n"))
+	}
+}
+
 func (j *JobResults) Step(name string) *StepResults {
 	jobType, _ := j.runContext.Run.Job().Type()
 	if jobType == model.JobTypeReusableWorkflowLocal ||
@@ -151,6 +176,11 @@ func (s *StepResults) Logs() string {
 }
 
 func (s *StepResults) AssertCalledWith(t *testing.T, inputs map[string]string) {
+	stepType := s.step.Type()
+	if stepType == model.StepTypeRun {
+		t.Fatalf("Step '%s' is not calling an action or reusable workflow", s.StepName)
+	}
+
 	envs := s.step.EnvEvaluated
 	var errors []string
 	for k, expected := range inputs {
