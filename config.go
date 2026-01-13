@@ -9,6 +9,7 @@ import (
 type config struct {
 	actor                              string                     // the user that triggered the event
 	workdir                            string                     // path to working directory
+	workflowDir                        string                     // path to workflow directory
 	actionCacheDir                     string                     // path used for caching action contents
 	actionOfflineMode                  bool                       // when offline, use caching action contents
 	bindWorkdir                        bool                       // bind the workdir to the job container
@@ -55,6 +56,7 @@ func (c config) toRunnerConfig() *runner.Config {
 	return &runner.Config{
 		Actor:                              c.actor,
 		Workdir:                            c.workdir,
+		WorkflowDir:                        c.workflowDir,
 		ActionCacheDir:                     c.actionCacheDir,
 		ActionOfflineMode:                  c.actionOfflineMode,
 		BindWorkdir:                        c.bindWorkdir,
