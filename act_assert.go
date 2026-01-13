@@ -29,6 +29,7 @@ func New() *ActAssert {
 			gitHubInstance: "github.com",
 			remoteName:     "origin",
 			workdir:        ".",
+			workflowDir:    ".",
 			defaultBranch:  "main",
 			logOutput:      true,
 			token:          os.Getenv("GITHUB_TOKEN"),
@@ -89,6 +90,11 @@ func (a *ActAssert) WithPlatform(label, image string) *ActAssert {
 
 func (a *ActAssert) WithWorkdir(workdir string) *ActAssert {
 	a.workdir = workdir
+	return a
+}
+
+func (a *ActAssert) WithWorkflowDir(workflowDir string) *ActAssert {
+	a.workflowDir = workflowDir
 	return a
 }
 

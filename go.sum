@@ -169,8 +169,8 @@ github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81P
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.11.1 h1:7s2iGBzp5EwR7/aIZr8ao5+dra3wiQyKjjFuvgVKu7U=
 github.com/stretchr/testify v1.11.1/go.mod h1:wZwfW3scLgRK+23gO65QZefKpKQRnfz6sD981Nm4B6U=
-github.com/wd-hopkins/act v0.0.0-20251222180718-1506816bff57 h1:8mDn8+FgVwnx6l5XJOfg1HfaVPQeyKoBJIKeGdhW45w=
-github.com/wd-hopkins/act v0.0.0-20251222180718-1506816bff57/go.mod h1:eiTpjCgaBRlG3jhXdoJTRxgiyWKuS9Hd+OMJ/uloQKM=
+github.com/wd-hopkins/act v0.0.0-20260113093903-551e030217fb h1:qPChnHei5c/CC7GNNIjeibDBF4tfAj0lgq/TZFO+3Cw=
+github.com/wd-hopkins/act v0.0.0-20260113093903-551e030217fb/go.mod h1:eiTpjCgaBRlG3jhXdoJTRxgiyWKuS9Hd+OMJ/uloQKM=
 github.com/xanzy/ssh-agent v0.3.3 h1:+/15pJfg/RsTxqYcX6fHqOXZwwMP+2VyYWJeWM2qQFM=
 github.com/xanzy/ssh-agent v0.3.3/go.mod h1:6dzNDKs0J9rVPHPhaGCukekBHKqfl+L3KghI1Bc68Uw=
 github.com/xeipuuv/gojsonpointer v0.0.0-20180127040702-4e3ac2762d5f/go.mod h1:N2zxlSyiKSe5eX1tZViRH5QA0qijqEDrYZiPEAiq3wU=
