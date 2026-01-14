@@ -117,13 +117,17 @@ func (j *JobResults) Summary() string {
 	return j.runContext.Summary
 }
 
-func (j *JobResults) AssertCalledWith(t *testing.T, inputs map[string]string) {
+func (j *JobResults) GetInputs() map[string]string {
+	return j.runContext.WithEvaluated
+}
+
+func (j *JobResults) WasCalledWith(inputs map[string]string) (bool, error) {
 	jobType, err := j.runContext.Run.Job().Type()
 	if err != nil {
-		t.Fatalf("Error getting job type: %v", err)
+		return false, fmt.Errorf("error getting job type: %v", err)
 	}
 	if jobType == model.JobTypeDefault {
-		t.Fatalf("Job '%s' is not calling a reusable workflow", j.JobName)
+		return false, fmt.Errorf("job '%s' is not calling a reusable workflow", j.JobName)
 	}
 
 	with := j.runContext.WithEvaluated
@@ -138,8 +142,9 @@ func (j *JobResults) AssertCalledWith(t *testing.T, inputs map[string]string) {
 		}
 	}
 	if len(errors) > 0 {
-		t.Fatalf("Job '%s' did not receive expected inputs:\n%s", j.JobName, strings.Join(errors, "\n"))
+		return false, fmt.Errorf("Job '%s' did not receive expected inputs:\n%s", j.JobName, strings.Join(errors, "\n"))
 	}
+	return true, nil
 }
 
 func (j *JobResults) Step(name string) *StepResults {
