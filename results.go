@@ -95,7 +95,19 @@ func (j *JobResults) Failed() bool {
 }
 
 func (j *JobResults) Result() Result {
-	return Result(j.runContext.Run.Job().Result)
+	if j.runContext.Run.Job().Result != "" {
+		return Result(j.runContext.Run.Job().Result)
+	}
+	childrenSkipped := true
+	if j.runContext.ChildContexts != nil {
+		for _, runContext := range *j.runContext.ChildContexts {
+			childrenSkipped = childrenSkipped && runContext.Run.Job().Result == string(Skipped)
+		}
+	}
+	if childrenSkipped {
+		return Skipped
+	}
+	return ""
 }
 
 func (j *JobResults) Outputs() map[string]string {
