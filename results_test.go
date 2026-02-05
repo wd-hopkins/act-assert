@@ -155,10 +155,11 @@ func TestJobResults_CalledWith(t *testing.T) {
 	_ = workflow.Execute()
 
 	results := act_assert.NewResults(*workflow)
-	main := results.Job("main")
-	main.AssertCalledWith(t, map[string]string{
+	ok, err := results.Job("main").WasCalledWith(map[string]string{
 		"string_input": "nektos/act",
 		"bool_input":   "true",
 		"number_input": "1",
 	})
+	assert.NoError(t, err)
+	assert.True(t, ok)
 }

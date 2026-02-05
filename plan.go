@@ -66,6 +66,12 @@ func (j *JobPlan) WithBindMount(source, dest string) *JobPlan {
 	return j
 }
 
+// SetWorkflowName sets the name of the workflow that the job is part of. Applies to all jobs in the workflow.
+func (j *JobPlan) SetWorkflowName(name string) *JobPlan {
+	j.jobRun.Workflow.Name = name
+	return j
+}
+
 func (j *JobPlan) setStepOutputs() *JobPlan {
 	j.jobRun.StepOutputsFunc = func(step *model.Step) map[string]string {
 		for stepName, outputs := range j.stepOutputs {
