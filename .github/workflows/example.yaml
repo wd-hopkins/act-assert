@@ -12,7 +12,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          token: ${{ github.event_name == 'workflow_dispatch' && 'dispatch' || 'other' }}
+          token: ${{ case(github.event_name == 'workflow_dispatch', 'dispatch', 'other') }}
       - name: Run a one-line script
         run: echo Hello, world!
       - name: I am ${{ github.actor }}

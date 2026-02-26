@@ -31,24 +31,28 @@ func NewResults(act ActAssert) *Results {
 
 func (r *Results) Job(name string) *JobResults {
 	for _, ctx := range r.runContexts {
-		if ctx.JobName == name || ctx.Run.JobID == name {
-			return &JobResults{
-				JobName:    ctx.JobName,
-				runContext: ctx,
-			}
-		}
-		if ctx.ChildContexts != nil {
-			for _, childContext := range *ctx.ChildContexts {
-				if childContext.JobName == name || childContext.Run.JobID == name {
-					return &JobResults{
-						JobName:    ctx.JobName,
-						runContext: ctx,
-					}
-				}
-			}
+		if job := getJobWithName(ctx, name); job != nil {
+			return job
 		}
 	}
 	panic(fmt.Sprintf("Job %s not found in results", name))
+}
+
+func getJobWithName(ctx *runner.RunContext, name string) *JobResults {
+	if ctx.JobName == name || ctx.Run.JobID == name {
+		return &JobResults{
+			JobName:    ctx.JobName,
+			runContext: ctx,
+		}
+	}
+	if ctx.ChildContexts != nil {
+		for _, childContext := range *ctx.ChildContexts {
+			if childCtx := getJobWithName(childContext, name); childCtx != nil {
+				return childCtx
+			}
+		}
+	}
+	return nil
 }
 
 func (r *Results) MatrixJob(name string) MatrixJobResults {
