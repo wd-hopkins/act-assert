@@ -7,7 +7,7 @@ toolchain go1.24.5
 require (
 	github.com/docker/docker v28.4.0+incompatible
 	github.com/stretchr/testify v1.11.1
-	github.com/wd-hopkins/act v0.0.0-20260226102230-0ec71c6f31bb
+	github.com/wd-hopkins/act v0.0.0-20260611163248-9e5880bd6d48
 )
 
 require (
